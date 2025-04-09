@@ -1,0 +1,28 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "title here"
+  author: "Oliver Meek, Tara Udani, Carrie Feng"
+  date: "4/9/2025"
+  description: "A guide to data cleaning, exploration, visualization, and dictionary creation."
+  repo-url: https://github.com/MeekButMighty/hoo_loves_acls
+
+
+  chapters:
+    - index.qmd
+    - datacleaning.qmd
+    - eda.qmd
+    - dataviz.qmd
+    - datadictionary.qmd
+
+
+format:
+  html:
+    theme: light
+    code-fold: false
+    backgroundcolor: "#ffffff"
+
+
+

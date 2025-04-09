@@ -1,0 +1,17 @@
+{
+  "index.qmd": {
+    "index.html": "6988277c"
+  },
+  "datacleaning.qmd": {
+    "datacleaning.html": "b0da06b6"
+  },
+  "eda.qmd": {
+    "eda.html": "76fd1958"
+  },
+  "dataviz.qmd": {
+    "dataviz.html": "87c2e1d7"
+  },
+  "datadictionary.qmd": {
+    "datadictionary.html": "6cb0379d"
+  }
+}
