@@ -48,5 +48,15 @@
     "crumbs": [
       "Report"
     ]
+  },
+  {
+    "objectID": "datacleaning.html",
+    "href": "datacleaning.html",
+    "title": "1  Data Cleaning",
+    "section": "",
+    "text": "All data used in this project came from a simulated dataset regarding ACLR recovery. The simulated data was based on patient data compiled by School of Data Science and the Department of Kinesiology at the University of Virginia. To explore our guiding question, we filtered and cleaned the dataset as below:\nFirst, we imported our dependencies and loaded in the original dataset\n\n#import dependencies\nimport pandas as pd\n\n\n#load in the data\naclr_orig = pd.read_csv('aclr_data.csv')\n\nSecond, we dropped all columns that weren’t relevant to our guiding question. We included strength measurements as well as demographics that might impact recovery\n\ncol_list = ['record_id', 'sex_dashboard', 'age', 'age_group', 'tss', 'tss_dashboard', 'ikdc', 'acl_rsi']\nlsi_list = [col for col in aclr_orig.columns if 'lsi' in col and '_l' not in col]\nfinal_list = col_list + lsi_list\naclr_used = aclr_orig[final_list]\n\nSince the data was longitudinal, we could fill in some missing data using ‘record_id’, which identified unique patients. Values for sex and age group were filled in this way:\n\naclr = aclr_used.copy()\n# Update to use .ffill() and .bfill() directly\naclr['sex_dashboard'] = aclr.groupby('record_id')['sex_dashboard'].transform(lambda x: x.ffill().bfill())\naclr['age_group'] = aclr.groupby('record_id')['age_group'].transform(lambda x: x.ffill().bfill())\n\nC:\\Users\\olive\\AppData\\Local\\Temp\\ipykernel_29088\\3751731967.py:3: FutureWarning:\n\nDowncasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`\n\n\n\nAge group was converted to a categorical variable\n\naclr['age_group'] = aclr['age_group'].astype('category')\n\nDue to the nature of the data, i.e. patients having multiple visits and various strength tests being used in different combinations, we chose not to drop rows with NA values. This gives u the most data possible to work with when drawing conclusions.\n\naclr.to_csv('cleaned_aclr_data.csv', index=False)",
+    "crumbs": [
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Data Cleaning</span>"
+    ]
   }
 ]
