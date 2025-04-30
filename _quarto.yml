@@ -2,9 +2,6 @@ project:
   type: book
   output-dir: docs
 
-execute:
-  python: c:\Users\olive\OneDrive\Desktop\DS\Design 1\finalproj\.venv\Scripts\python.exe
-
 book:
   title: "Understanding Knee Strength during ACLR Recovery"
   author: "Oliver Meek, Tara Udani, Carrie Feng"
