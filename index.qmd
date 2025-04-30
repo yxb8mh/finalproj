@@ -1,5 +1,17 @@
----
-title: "Untitled"
-format: html
----
+# Report {.unnumbered}
 
+## Prepared for {.unnumbered}
+
+[Insert organization, stakeholder, audience here]
+
+## Problem Statement
+
+[Clearly define the problem you are addressing. Include background context and the significance of the issue. This is beginning of your story - plot setting. Can include a graph]
+
+## Analysis
+
+ [use storytelling and visuals to show how you are answering the problem]
+
+## Conclusion
+
+ [use storytelling to give your conclusions and/or action items, can include a visual]
