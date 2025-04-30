@@ -1,5 +1,5 @@
 ---
-title: "Data Cleaning"
+title: "Untitled"
 format: html
 ---
 All data used in this project came from a simulated dataset regarding ACLR recovery. The simulated data was based on patient data compiled by School of Data Science and the Department of Kinesiology at the University of Virginia. To explore our guiding question, we filtered and cleaned the dataset as below:
@@ -46,5 +46,3 @@ Due to the nature of the data, i.e. patients having multiple visits and various 
 ```{python}
 aclr.to_csv('cleaned_aclr_data.csv', index=False)
 ```
-
-

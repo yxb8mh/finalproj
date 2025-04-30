@@ -5,7 +5,7 @@
       "metadata": {},
       "source": [
         "---\n",
-        "title: \"Data Cleaning\"\n",
+        "title: \"Untitled\"\n",
         "format: html\n",
         "---\n",
         "\n",
@@ -16,7 +16,7 @@
         "\n",
         "First, we imported our dependencies and loaded in the original dataset\n"
       ],
-      "id": "e30b8a59"
+      "id": "2902f0c2"
     },
     {
       "cell_type": "code",
@@ -25,7 +25,7 @@
         "#import dependencies\n",
         "import pandas as pd"
       ],
-      "id": "e37b4a8d",
+      "id": "756f24e1",
       "execution_count": null,
       "outputs": []
     },
@@ -36,7 +36,7 @@
         "#load in the data\n",
         "aclr_orig = pd.read_csv('aclr_data.csv')"
       ],
-      "id": "32698087",
+      "id": "ecac9635",
       "execution_count": null,
       "outputs": []
     },
@@ -46,7 +46,7 @@
       "source": [
         "Second, we dropped all columns that weren't relevant to our guiding question. We included strength measurements as well as demographics that might impact recovery\n"
       ],
-      "id": "257ed456"
+      "id": "263430c8"
     },
     {
       "cell_type": "code",
@@ -57,7 +57,7 @@
         "final_list = col_list + lsi_list\n",
         "aclr_used = aclr_orig[final_list]"
       ],
-      "id": "ad9c1319",
+      "id": "baa75956",
       "execution_count": null,
       "outputs": []
     },
@@ -67,7 +67,7 @@
       "source": [
         "Since the data was longitudinal, we could fill in some missing data using 'record_id', which identified unique patients. Values for sex and age group were filled in this way:\n"
       ],
-      "id": "ec587b7c"
+      "id": "85dad9f9"
     },
     {
       "cell_type": "code",
@@ -78,7 +78,7 @@
         "aclr['sex_dashboard'] = aclr.groupby('record_id')['sex_dashboard'].transform(lambda x: x.ffill().bfill())\n",
         "aclr['age_group'] = aclr.groupby('record_id')['age_group'].transform(lambda x: x.ffill().bfill())"
       ],
-      "id": "a81797ec",
+      "id": "5ac9753f",
       "execution_count": null,
       "outputs": []
     },
@@ -88,7 +88,7 @@
       "source": [
         "Age group was converted to a categorical variable\n"
       ],
-      "id": "9524c0bd"
+      "id": "4605d611"
     },
     {
       "cell_type": "code",
@@ -96,7 +96,7 @@
       "source": [
         "aclr['age_group'] = aclr['age_group'].astype('category')"
       ],
-      "id": "5295a347",
+      "id": "fb873f37",
       "execution_count": null,
       "outputs": []
     },
@@ -106,7 +106,7 @@
       "source": [
         "Due to the nature of the data, i.e. patients having multiple visits and various strength tests being used in different combinations, we chose not to drop rows with NA values. This gives u the most data possible to work with when drawing conclusions.\n"
       ],
-      "id": "6d7aad89"
+      "id": "6e2b7343"
     },
     {
       "cell_type": "code",
@@ -114,7 +114,7 @@
       "source": [
         "aclr.to_csv('cleaned_aclr_data.csv', index=False)"
       ],
-      "id": "30af8e7c",
+      "id": "fda668c1",
       "execution_count": null,
       "outputs": []
     }
