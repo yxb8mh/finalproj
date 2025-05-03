@@ -1,5 +1,152 @@
 ---
-title: "Untitled"
+title: "Exploratory Data Analysis"
 format: html
 ---
+
+```{python}
+#import dependencies
+import matplotlib.pyplot as plt
+import seaborn as sns
+import pandas as pd
+#load data
+aclr_clean = pd.read_csv('cleaned_aclr_data.csv')
+```
+
+# Demographic Distributions
+First, we did some preliminary graphs to understand what kind of patients were in the dataset. First with gender:
+```{python}
+unique_patients = aclr_clean.groupby('record_id').first()
+# Get the gender distribution
+sex_counts = unique_patients['sex_dashboard'].value_counts()
+#plot a bar graph
+plt.figure(figsize=(10, 6))
+plt.bar(sex_counts.index, sex_counts.values)
+plt.title('Gender distribution is relatively even in our dataset')
+sns.despine()
+```
+And then with age:
+```{python}
+#create a histogram for the ikdc scores
+sns.histplot(data=unique_patients, x="age", bins=20, kde=True)
+plt.title("Most Patients in Their Teens or Twenties")
+```
+
+# Progression of Strength
+Since this data is longitudinal, and we are interested in the progression of patient recovery over time, it makes the most since to do EDA organized around time since surgery. We checked out the distribution of strength measurments at different periods during recovery. First, 3-4 months since surgery:
+
+```{python}
+#sorting out just measurements from 3 to 4 months out
+early = aclr_clean[aclr_clean['tss_dashboard']=='3 to 4 months']
+#filtering just the used columns
+early = early[['lsi_ext_mvic_60', 'lsi_flex_mvic_60', 'lsi_ext_isok_60', 'lsi_flex_isok_60']]
+early = early.melt(var_name="Measurement", value_name="Value")
+early.dropna(inplace=True)
+#making violinplot
+sns.violinplot(data=early, x="Value", y="Measurement")
+plt.title("LSI strength measurements- 3 to 4 months post-op")
+plt.show()
+```
+
+Then 13 to 24 months post surgery:
+```{python}
+later = aclr_clean[aclr_clean['tss_dashboard']=='13 to 24 months']
+#filtering just the used columns
+later = later[['lsi_ext_mvic_60', 'lsi_flex_mvic_60', 'lsi_ext_isok_60', 'lsi_flex_isok_60']]
+later = later.melt(var_name="Measurement", value_name="Value")
+later.dropna(inplace=True)
+#making violinplot
+sns.violinplot(data=later, x="Value", y="Measurement")
+plt.title("LSI strength measurements- 13 to 24 months post-op")
+plt.show()
+```
+
+# Progression of more holistic variables
+Along with the strength measurements, patient's psychological readiness should also be considered. We explored how ACL-RSI scores developed during recovery.
+```{python}
+order = ['Preoperative', '3 to 4 months', '5 to 7 months', '8 to 12 months', '13 to 24 months']
+aclr_clean['tss_dashboard'] = pd.Categorical(aclr_clean['tss_dashboard'], categories=order, ordered=True)
+
+plt.figure(figsize=(9, 7))
+plt.title('RSI Score Generally Increases With Time Since Surgery')
+sns.barplot(data=aclr_clean, x = 'tss_dashboard', y = 'acl_rsi', color = 'darkgreen')
+sns.despine()
+```
+The dip after 12 months is notable, but it's likely that there could be a confounding variable here. Patients that don't feel psychologically ready to return to their sport are more likely to go back to the doctor after 12 months. We also examined IKDC scores over time
+
+```{python}
+# looking at ikdc score compared to time since surgery, the score generally increases over time
+order = ['Preoperative', '3 to 4 months', '5 to 7 months', '8 to 12 months', '13 to 24 months']
+aclr_clean['tss_dashboard'] = pd.Categorical(aclr_clean['tss_dashboard'], categories=order, ordered=True)
+
+plt.figure(figsize=(9, 7))
+plt.title('IKDC Score Generally Increases With Time Since Surgery')
+sns.barplot(data=aclr_clean, x = 'tss_dashboard', y = 'ikdc', color = 'darkgreen')
+sns.despine()
+```
+Similar situation as the graph before, patients who are still struggling after 12 months are more likely to return to the doctor. In general, though, most patient visits were less than 10 months after surgery:
+```{python}
+sns.boxplot(data=aclr_clean, x="tss")
+plt.xlim(-5, 24)
+plt.title('Despite outliers, most patients were seen less than 10 months post-op')
+```
+
+# Correlations
+We wanted to see if the various demographics and strength tests we were interested in correlated with one another, so we made a heatmap.
+
+```{python}
+#creating a heatmap to see how each variable correlates with the others
+correlations = aclr_clean.corr(numeric_only= True)
+
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlations, annot=True, cmap='coolwarm')
+plt.title("Correlation Matrix")
+plt.show()
+```
+IKDC and RSI are positively correlated, which makes sense given they are more holistic evaluations. We next used a scatter plot to look into what the relationships between metrics like these and strength test might be
+
+```{python}
+plt.figure(figsize=(10, 6))
+plt.scatter(aclr_clean['acl_rsi'], aclr_clean['lsi_ext_isok_60'], color = 'orange', s = 10, label = 'Extension')
+plt.scatter(aclr_clean['acl_rsi'], aclr_clean['lsi_flex_isok_60'], color = 'green', s = 10, label = 'Flexion')
+sns.despine()
+
+plt.xlabel('rsi score')
+plt.ylabel('lsi strength')
+plt.title('RSI Score and LSI ISOK Strength for Extension and Flexion at 60')
+plt.legend()
+plt.show()
+```
+
+Similar to what the heatmap suggested, not quite as correlated as one would think. Extension scores seem to have lower range than flexion ones. Let's see how they both progress over time:
+```{python}
+# regression plot to see ISOK trend lines for flexion and extension strength and time since surgery shows greater strength for flexion than extension
+plt.figure(figsize=(10, 6))
+sns.regplot(data=aclr_clean, x ='tss', y ='lsi_ext_isok_60', color = 'orange', label = 'Extension')
+sns.regplot(data=aclr_clean, x ='tss', y ='lsi_flex_isok_60', color = 'green', label = 'Flexion')
+sns.despine()
+
+plt.xlabel('Time Since Surgery')
+plt.ylabel('ISOK LSI Strength')
+plt.title('ISOK LSI Strength for Flexion Appears Greater Than Extension Over Time Since Surgery')
+plt.legend()
+```
+
+The lines of best fit might look close together, but considering an LSI of over 100 is rare, the difference might be significant.
+
+Lastly, given that we were interested in both flexion and extension strength, we plotted them on a scatterplot:
+```{python}
+#relationship between extension and flexion strength (both MVIC and isokinetic at 60°) across patients, colored by sex to highlight potential gender-based patterns.
+sns.scatterplot(data=aclr_clean, x='lsi_ext_mvic_60', y='lsi_flex_mvic_60', hue='sex_dashboard')
+plt.title("MVIC 60°: Extension vs Flexion Strength by Sex")
+plt.xlabel("Extension LSI (MVIC 60°)")
+plt.ylabel("Flexion LSI (MVIC 60°)")
+plt.show()
+
+# Scatterplot: Isokinetic 60° Strength
+sns.scatterplot(data=aclr_clean, x='lsi_ext_isok_60', y='lsi_flex_isok_60', hue='sex_dashboard')
+plt.title("Isokinetic 60°: Extension vs Flexion Strength by Sex")
+plt.xlabel("Extension LSI (Isok 60°)")
+plt.ylabel("Flexion LSI (Isok 60°)")
+plt.show()
+```
 
