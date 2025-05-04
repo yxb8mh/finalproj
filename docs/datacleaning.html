@@ -210,43 +210,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <p>All data used in this project came from a simulated dataset regarding ACLR recovery. The simulated data was based on patient data compiled by School of Data Science and the Department of Kinesiology at the University of Virginia. To explore our guiding question, we filtered and cleaned the dataset as below:</p>
 <p>First, we imported our dependencies and loaded in the original dataset</p>
-<div id="700ecd2d" class="cell" data-execution_count="1">
+<div id="e7e9f333" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import dependencies</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="3caac177" class="cell" data-execution_count="2">
+<div id="385cd829" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load in the data</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>aclr_orig <span class="op">=</span> pd.read_csv(<span class="st">'aclr_data.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Second, we dropped all columns that weren’t relevant to our guiding question. We included strength measurements as well as demographics that might impact recovery</p>
-<div id="7fe4fd42" class="cell" data-execution_count="3">
+<div id="ce06ec2a" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>col_list <span class="op">=</span> [<span class="st">'record_id'</span>, <span class="st">'sex_dashboard'</span>, <span class="st">'age'</span>, <span class="st">'age_group'</span>, <span class="st">'tss'</span>, <span class="st">'tss_dashboard'</span>, <span class="st">'ikdc'</span>, <span class="st">'acl_rsi'</span>]</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>lsi_list <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> aclr_orig.columns <span class="cf">if</span> <span class="st">'lsi'</span> <span class="kw">in</span> col <span class="kw">and</span> <span class="st">'_l'</span> <span class="kw">not</span> <span class="kw">in</span> col]</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>final_list <span class="op">=</span> col_list <span class="op">+</span> lsi_list</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>aclr_used <span class="op">=</span> aclr_orig[final_list]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Since the data was longitudinal, we could fill in some missing data using ‘record_id’, which identified unique patients. Values for sex and age group were filled in this way:</p>
-<div id="3259cc83" class="cell" data-execution_count="4">
+<div id="65662af3" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>aclr <span class="op">=</span> aclr_used.copy()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Update to use .ffill() and .bfill() directly</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>aclr[<span class="st">'sex_dashboard'</span>] <span class="op">=</span> aclr.groupby(<span class="st">'record_id'</span>)[<span class="st">'sex_dashboard'</span>].transform(<span class="kw">lambda</span> x: x.ffill().bfill())</span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>aclr[<span class="st">'age_group'</span>] <span class="op">=</span> aclr.groupby(<span class="st">'record_id'</span>)[<span class="st">'age_group'</span>].transform(<span class="kw">lambda</span> x: x.ffill().bfill())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>C:\Users\olive\AppData\Local\Temp\ipykernel_51612\3751731967.py:3: FutureWarning:
+<pre><code>C:\Users\olive\AppData\Local\Temp\ipykernel_30288\3751731967.py:3: FutureWarning:
 
 Downcasting object dtype arrays on .fillna, .ffill, .bfill is deprecated and will change in a future version. Call result.infer_objects(copy=False) instead. To opt-in to the future behavior, set `pd.set_option('future.no_silent_downcasting', True)`
 </code></pre>
 </div>
 </div>
 <p>Age group was converted to a categorical variable</p>
-<div id="63a60ff3" class="cell" data-execution_count="5">
+<div id="3c83c1c8" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>aclr[<span class="st">'age_group'</span>] <span class="op">=</span> aclr[<span class="st">'age_group'</span>].astype(<span class="st">'category'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Due to the nature of the data, i.e.&nbsp;patients having multiple visits and various strength tests being used in different combinations, we chose not to drop rows with NA values. This gives u the most data possible to work with when drawing conclusions. We did, however, notice an issue in the lsi_flex_mvic_60 column. Some values were labled infinite, so we replaced these with NaN.</p>
-<div id="f705c7b1" class="cell" data-execution_count="6">
+<div id="325870f9" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>aclr.replace([<span class="bu">float</span>(<span class="st">'inf'</span>), <span class="bu">float</span>(<span class="st">'-inf'</span>)], <span class="bu">float</span>(<span class="st">'nan'</span>), inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="dac871d9" class="cell" data-execution_count="7">
+<div id="b2b54d4b" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aclr.to_csv(<span class="st">'cleaned_aclr_data.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
