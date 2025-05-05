@@ -3,3 +3,18 @@ title: "Data Dictionary"
 format: html
 ---
 
+* 'record_id': The unique identifier for each patient. Some patients may have multiple visits. (Numeric)
+* 'sex_dashboard': The sex of the patient, male, female, or not reported. (Categorical)
+* 'age': The age in years of the patient. (Numeric)
+* 'age_group': The age group the patient falls into. (Categorical)
+* 'tss': Time since surgery in months (Numeric)
+* tss_dashboard': A categorical version of the time since surgery column (Categorical)
+* 'ikdc': The patients score on the International Knee Documentation Committee's survey, indicating overall knee function (Numeric)
+* 'acl_rsi': The patient's score on the ACL Return to Sport after Injury, which measures psychological readiness. (Numeric)
+* 'lsi_ext_mvic_90': The LSI of extension strength measured isometrically at 90 degrees. (Numeric)
+* 'lsi_ext_mvic_60': The LSI of extension strength measured isometrically at 60 degrees. (Numeric)
+* 'lsi_flex_mvic_60': The LSI of flexion strength measured isometrically at 60 degrees. (Numeric)
+* 'lsi_ext_isok_60': The LSI of extension strength measured isokinetically at 60 degrees. (Numeric)
+* 'lsi_flex_isok_60': The LSI of flexion strength measured isokinetically at 60 degrees. (Numeric)
+
+The LSI, or Limb Symmetry Index, indicates how well the affected knee (the one operated on) is performing in comparison to the unaffected knee. This accounts for nuances from patient to patient.
