@@ -1,4 +1,6 @@
 notes to self:
-- tweak title of spaghetti chart
-- despine
-- 
+- maybe chnage title of age graph
+- not color coding by time but showing an individual patient on top of all the data
+
+- read me
+- report
