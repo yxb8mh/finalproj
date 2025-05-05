@@ -24,7 +24,7 @@ book:
 
 format:
   html:
-    theme: lux
+    theme: journal
     code-fold: false
     backgroundcolor: "#ffffff"
 

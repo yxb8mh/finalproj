@@ -12,7 +12,7 @@ import pandas as pd
 aclr_clean = pd.read_csv('cleaned_aclr_data.csv')
 ```
 
-# Demographic Distributions
+## Demographic Distributions
 First, we did some preliminary graphs to understand what kind of patients were in the dataset. First with gender:
 ```{python}
 unique_patients = aclr_clean.groupby('record_id').first()
@@ -31,7 +31,7 @@ sns.histplot(data=unique_patients, x="age", bins=20, kde=True)
 plt.title("Most Patients in Their Teens or Twenties")
 ```
 
-# Progression of Strength
+## Progression of Strength
 Since this data is longitudinal, and we are interested in the progression of patient recovery over time, it makes the most since to do EDA organized around time since surgery. We checked out the distribution of strength measurments at different periods during recovery. First, 3-4 months since surgery:
 
 ```{python}
@@ -60,7 +60,7 @@ plt.title("LSI strength measurements- 13 to 24 months post-op")
 plt.show()
 ```
 
-# Progression of more holistic variables
+## Progression of more holistic variables
 Along with the strength measurements, patient's psychological readiness should also be considered. We explored how ACL-RSI scores developed during recovery.
 ```{python}
 order = ['Preoperative', '3 to 4 months', '5 to 7 months', '8 to 12 months', '13 to 24 months']
@@ -90,7 +90,7 @@ plt.xlim(-5, 24)
 plt.title('Despite outliers, most patients were seen less than 10 months post-op')
 ```
 
-# Correlations
+## Correlations
 We wanted to see if the various demographics and strength tests we were interested in correlated with one another, so we made a heatmap.
 
 ```{python}
