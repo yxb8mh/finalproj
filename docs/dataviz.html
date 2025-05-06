@@ -216,7 +216,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="a80f97b5" class="cell" data-execution_count="1">
+<div id="eac753ba" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import dependencies</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="regression-plot---strength-vs-age" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="regression-plot---strength-vs-age"><span class="header-section-number">3.1</span> Regression Plot - Strength vs Age</h2>
-<div id="7f2bdc36" class="cell" data-execution_count="2">
+<div id="b641fa27" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#filter data for only patients at 5 to 7 months post operation</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>aclr_filtered <span class="op">=</span> aclr[aclr[<span class="st">'tss_dashboard'</span>] <span class="op">==</span> <span class="st">'5 to 7 months'</span>]</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -281,7 +281,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="spaghetti-plot---early-and-late-recovery" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="spaghetti-plot---early-and-late-recovery"><span class="header-section-number">3.2</span> Spaghetti Plot - early and late recovery</h2>
-<div id="093e92aa" class="cell" data-execution_count="3">
+<div id="54d27a35" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#group data by time since surgery</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> aclr.groupby(<span class="st">'tss_dashboard'</span>).agg(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    mean_ext_mvic_60<span class="op">=</span>(<span class="st">'lsi_ext_mvic_60'</span>, <span class="st">'mean'</span>),</span>
@@ -360,7 +360,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="connected-scatterplot" class="level2" data-number="3.3">
 <h2 data-number="3.3" class="anchored" data-anchor-id="connected-scatterplot"><span class="header-section-number">3.3</span> Connected Scatterplot</h2>
-<div id="0512e1a8" class="cell" data-execution_count="4">
+<div id="4701fad6" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define the selected patients that filter patinets with 2 or more visits and picked the top 5</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_required_2 <span class="op">=</span> aclr.dropna(subset<span class="op">=</span>[<span class="st">'lsi_flex_mvic_60'</span>, <span class="st">'acl_rsi'</span>, <span class="st">'tss'</span>])</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>patient_counts_2 <span class="op">=</span> df_required_2[<span class="st">'record_id'</span>].value_counts()</span>
@@ -375,7 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>df_iso_selected <span class="op">=</span> df_iso_required[df_iso_required[<span class="st">'record_id'</span>].isin(selected_iso_patients)]</span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#make the legend sit inside the plot </span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">6</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">8</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#first plot the flexion strength vs rsi</span></span>

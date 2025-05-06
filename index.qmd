@@ -13,12 +13,15 @@ How might strength tests relate to more holistic measures of recovery, such as A
 ## Analysis
 
 Based on our visuals, we can see some clear trends in flexion and extension strength over recovery time. Our first graph shows the relationship between isokinetic flexion and extension strength, five to seven months post-operation, over a range of ages. From the graph, we concluded that regardless of the patient’s age, their flexion strength at this stage in recovery is better than their extension strength. We can even see that flexion strength is generally around a value of 100, which means that the involved limb is operating at the same strength as the uninvolved limb. 
+
 ![Strength vs Age](strengthreg.jpg)
 
 In our second graph, we looked at the trends in isokinetic and isometric LSI flexion and extension strengths during early and late recovery. A gap between flexion and extension strength LSI exists in early recovery, and still exists 13 to 24 months after surgery. This trend exists for both isokinetic and isometric data. Even though both kinds of knee strength improve, doctors ought to try and close the gap between them.
+
 ![Spaghetti Plot](spaghetti.jpg)
 
 In our third graph, we looked at a couple of patients’ journeys through recovery by plotting their strength against psychological readiness. We concluded that recovery is not linear and requires a balance between physical readiness and mental confidence. When comparing the two graphs, we noticed that flexion strength seems to be more consistent with an upward trend in relation to the RSI score across patients, suggesting a more consistent relationship between flexion strength and confidence, indicating a gap between flexion and extension strength rehab programs. 
+
 ![Connected Scatter](connected.jpg)
 
 ## Conclusion

@@ -146,7 +146,7 @@ selected_iso_patients = patient_counts_iso[patient_counts_iso >= 2].index[:5]
 df_iso_selected = df_iso_required[df_iso_required['record_id'].isin(selected_iso_patients)]
 
 #make the legend sit inside the plot 
-fig, axes = plt.subplots(1, 2, figsize=(16, 6), sharey=True)
+fig, axes = plt.subplots(1, 2, figsize=(16, 8), sharey=True)
 
 
 #first plot the flexion strength vs rsi
