@@ -2,11 +2,14 @@
 
 ## Prepared for {.unnumbered}
 
-[Insert organization, stakeholder, audience here]
+This report was made to help doctors, physical therapists, or any clinician who works with ACLR patients during recovery. Our focus was to offer insight into how flexion and extension strength progress over time after surgery.
 
 ## Problem Statement
 
-[Clearly define the problem you are addressing. Include background context and the significance of the issue. This is beginning of your story - plot setting. Can include a graph]
+The knee has two primary functions: flexion and extension. Both these strengths can be measured isokinetically or isometrically, and at varying degrees. After injury, and even after surgery, both these strengths have decreased in the affected limb. Rehabilitation aims to get a patient’s knee strengths back to where they were before surgery. To explore the successes and failures of rehab, we asked the following questions:
+* Do flexion strength and extension strength progress differently during recovery?
+* How might strength tests relate to more holistic measures of recovery, such as ACL-RSI?
+
 
 ## Analysis
 

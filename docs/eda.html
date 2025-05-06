@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="07f3173f" class="cell" data-execution_count="1">
+<div id="f3b52191" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import dependencies</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
@@ -228,7 +228,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="demographic-distributions" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="demographic-distributions"><span class="header-section-number">2.1</span> Demographic Distributions</h2>
 <p>First, we did some preliminary graphs to understand what kind of patients were in the dataset. First with gender:</p>
-<div id="73dd53df" class="cell" data-execution_count="2">
+<div id="f38f72e3" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>unique_patients <span class="op">=</span> aclr_clean.groupby(<span class="st">'record_id'</span>).first()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the gender distribution</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>sex_counts <span class="op">=</span> unique_patients[<span class="st">'sex_dashboard'</span>].value_counts()</span>
@@ -246,7 +246,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>And then with age:</p>
-<div id="836db0a9" class="cell" data-execution_count="3">
+<div id="5d6509ef" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create a histogram for the ikdc scores</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sns.histplot(data<span class="op">=</span>unique_patients, x<span class="op">=</span><span class="st">"age"</span>, bins<span class="op">=</span><span class="dv">20</span>, kde<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Most Patients in Their Teens or Twenties"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -265,7 +265,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="progression-of-strength" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="progression-of-strength"><span class="header-section-number">2.2</span> Progression of Strength</h2>
 <p>Since this data is longitudinal, and we are interested in the progression of patient recovery over time, it makes the most since to do EDA organized around time since surgery. We checked out the distribution of strength measurments at different periods during recovery. First, 3-4 months since surgery:</p>
-<div id="13fe2451" class="cell" data-execution_count="4">
+<div id="242bf676" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#sorting out just measurements from 3 to 4 months out</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>early <span class="op">=</span> aclr_clean[aclr_clean[<span class="st">'tss_dashboard'</span>]<span class="op">==</span><span class="st">'3 to 4 months'</span>]</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">#filtering just the used columns</span></span>
@@ -285,7 +285,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Then 13 to 24 months post surgery:</p>
-<div id="b77db307" class="cell" data-execution_count="5">
+<div id="7383830a" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>later <span class="op">=</span> aclr_clean[aclr_clean[<span class="st">'tss_dashboard'</span>]<span class="op">==</span><span class="st">'13 to 24 months'</span>]</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#filtering just the used columns</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>later <span class="op">=</span> later[[<span class="st">'lsi_ext_mvic_60'</span>, <span class="st">'lsi_flex_mvic_60'</span>, <span class="st">'lsi_ext_isok_60'</span>, <span class="st">'lsi_flex_isok_60'</span>]]</span>
@@ -307,7 +307,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="progression-of-more-holistic-variables" class="level2" data-number="2.3">
 <h2 data-number="2.3" class="anchored" data-anchor-id="progression-of-more-holistic-variables"><span class="header-section-number">2.3</span> Progression of more holistic variables</h2>
 <p>Along with the strength measurements, patient’s psychological readiness should also be considered. We explored how ACL-RSI scores developed during recovery.</p>
-<div id="6edd62ab" class="cell" data-execution_count="6">
+<div id="25de40d6" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> [<span class="st">'Preoperative'</span>, <span class="st">'3 to 4 months'</span>, <span class="st">'5 to 7 months'</span>, <span class="st">'8 to 12 months'</span>, <span class="st">'13 to 24 months'</span>]</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>aclr_clean[<span class="st">'tss_dashboard'</span>] <span class="op">=</span> pd.Categorical(aclr_clean[<span class="st">'tss_dashboard'</span>], categories<span class="op">=</span>order, ordered<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>The dip after 12 months is notable, but it’s likely that there could be a confounding variable here. Patients that don’t feel psychologically ready to return to their sport are more likely to go back to the doctor after 12 months. We also examined IKDC scores over time</p>
-<div id="ecaf5ee7" class="cell" data-execution_count="7">
+<div id="77d14fc7" class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># looking at ikdc score compared to time since surgery, the score generally increases over time</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>order <span class="op">=</span> [<span class="st">'Preoperative'</span>, <span class="st">'3 to 4 months'</span>, <span class="st">'5 to 7 months'</span>, <span class="st">'8 to 12 months'</span>, <span class="st">'13 to 24 months'</span>]</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>aclr_clean[<span class="st">'tss_dashboard'</span>] <span class="op">=</span> pd.Categorical(aclr_clean[<span class="st">'tss_dashboard'</span>], categories<span class="op">=</span>order, ordered<span class="op">=</span><span class="va">True</span>)</span>
@@ -342,7 +342,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Similar situation as the graph before, patients who are still struggling after 12 months are more likely to return to the doctor. In general, though, most patient visits were less than 10 months after surgery:</p>
-<div id="d2d06772" class="cell" data-execution_count="8">
+<div id="6f5b929c" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sns.boxplot(data<span class="op">=</span>aclr_clean, x<span class="op">=</span><span class="st">"tss"</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.xlim(<span class="op">-</span><span class="dv">5</span>, <span class="dv">24</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Despite outliers, most patients were seen less than 10 months post-op'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -361,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="correlations" class="level2" data-number="2.4">
 <h2 data-number="2.4" class="anchored" data-anchor-id="correlations"><span class="header-section-number">2.4</span> Correlations</h2>
 <p>We wanted to see if the various demographics and strength tests we were interested in correlated with one another, so we made a heatmap.</p>
-<div id="e9538b09" class="cell" data-execution_count="9">
+<div id="ece1b345" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#creating a heatmap to see how each variable correlates with the others</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>correlations <span class="op">=</span> aclr_clean.corr(numeric_only<span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -378,7 +378,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>IKDC and RSI are positively correlated, which makes sense given they are more holistic evaluations. We next used a scatter plot to look into what the relationships between metrics like these and strength test might be</p>
-<div id="4446d2e1" class="cell" data-execution_count="10">
+<div id="31f5cc23" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.scatter(aclr_clean[<span class="st">'acl_rsi'</span>], aclr_clean[<span class="st">'lsi_ext_isok_60'</span>], color <span class="op">=</span> <span class="st">'orange'</span>, s <span class="op">=</span> <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Extension'</span>)</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.scatter(aclr_clean[<span class="st">'acl_rsi'</span>], aclr_clean[<span class="st">'lsi_flex_isok_60'</span>], color <span class="op">=</span> <span class="st">'green'</span>, s <span class="op">=</span> <span class="dv">10</span>, label <span class="op">=</span> <span class="st">'Flexion'</span>)</span>
@@ -398,7 +398,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Similar to what the heatmap suggested, not quite as correlated as one would think. Extension scores seem to have lower range than flexion ones. Let’s see how they both progress over time:</p>
-<div id="6314c6a6" class="cell" data-execution_count="11">
+<div id="72654585" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># regression plot to see ISOK trend lines for flexion and extension strength and time since surgery shows greater strength for flexion than extension</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>sns.regplot(data<span class="op">=</span>aclr_clean, x <span class="op">=</span><span class="st">'tss'</span>, y <span class="op">=</span><span class="st">'lsi_ext_isok_60'</span>, color <span class="op">=</span> <span class="st">'orange'</span>, label <span class="op">=</span> <span class="st">'Extension'</span>)</span>
@@ -419,7 +419,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>The lines of best fit might look close together, but considering an LSI of over 100 is rare, the difference might be significant.</p>
 <p>Lastly, given that we were interested in both flexion and extension strength, we plotted them on a scatterplot:</p>
-<div id="55cb8885" class="cell" data-execution_count="12">
+<div id="4cf3daae" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#relationship between extension and flexion strength (both MVIC and isokinetic at 60°) across patients, colored by sex to highlight potential gender-based patterns.</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sns.scatterplot(data<span class="op">=</span>aclr_clean, x<span class="op">=</span><span class="st">'lsi_ext_mvic_60'</span>, y<span class="op">=</span><span class="st">'lsi_flex_mvic_60'</span>, hue<span class="op">=</span><span class="st">'sex_dashboard'</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"MVIC 60°: Extension vs Flexion Strength by Sex"</span>)</span>
