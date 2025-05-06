@@ -129,3 +129,71 @@ plt.text(0.9, 1, "13–24 months post-op", ha='center', va='top', fontsize=13, t
 plt.tight_layout()
 plt.savefig('spaghetti.jpg', format='jpg', dpi=300, bbox_inches='tight')
 ```
+
+## Connected Scatterplot
+```{python}
+#define the selected patients that filter patinets with 2 or more visits and picked the top 5
+df_required_2 = aclr.dropna(subset=['lsi_flex_mvic_60', 'acl_rsi', 'tss'])
+patient_counts_2 = df_required_2['record_id'].value_counts()
+selected_patients_2 = patient_counts_2[patient_counts_2 >= 2].index[:5]
+df_selected_2 = df_required_2[df_required_2['record_id'].isin(selected_patients_2)]
+
+
+#same with iso
+df_iso_required = aclr.dropna(subset=['lsi_ext_isok_60', 'acl_rsi', 'tss'])
+patient_counts_iso = df_iso_required['record_id'].value_counts()
+selected_iso_patients = patient_counts_iso[patient_counts_iso >= 2].index[:5]
+df_iso_selected = df_iso_required[df_iso_required['record_id'].isin(selected_iso_patients)]
+
+#make the legend sit inside the plot 
+fig, axes = plt.subplots(1, 2, figsize=(16, 6), sharey=True)
+
+
+#first plot the flexion strength vs rsi
+palette = sns.color_palette("colorblind", len(selected_patients_2))
+for i, pid in enumerate(selected_patients_2):
+   patient_df = df_selected_2[df_selected_2['record_id'] == pid]
+   x_vals = patient_df['lsi_flex_mvic_60'].values
+   y_vals = patient_df['acl_rsi'].values
+   for j in range(len(x_vals) - 1):
+       dx = x_vals[j+1] - x_vals[j]
+       dy = y_vals[j+1] - y_vals[j]
+       x_mid = (x_vals[j] + x_vals[j+1]) / 2
+       y_mid = (y_vals[j] + y_vals[j+1]) / 2
+       axes[0].arrow(x_mid, y_mid,dx * 0.0001, dy * 0.0001,color=palette[i],alpha=0.9,head_width=1.5,head_length=1.5,length_includes_head=True)
+       axes[0].plot([x_vals[j], x_vals[j+1]], [y_vals[j], y_vals[j+1]], color=palette[i], linewidth=1.5)
+   axes[0].scatter(x_vals, y_vals, color=palette[i], edgecolor='k')
+axes[0].set_xlabel("Flexion Strength (LSI - MVIC 60°)")
+axes[0].set_ylabel("ACL-RSI Score")
+
+
+#make the legend
+legend_patch = plt.Line2D([0], [0], marker='_', color='grey', label='Each color = one patient',markerfacecolor='gray', markersize=10)
+axes[0].legend(handles=[legend_patch], loc='lower right')
+
+
+#make the second plot for extension strength vs rsi
+palette_ext = sns.color_palette("colorblind", len(selected_iso_patients))
+for i, pid in enumerate(selected_iso_patients):
+   patient_df = df_iso_selected[df_iso_selected['record_id'] == pid]
+   x_vals = patient_df['lsi_ext_isok_60'].values
+   y_vals = patient_df['acl_rsi'].values
+   for j in range(len(x_vals) - 1):
+       dx = x_vals[j+1] - x_vals[j]
+       dy = y_vals[j+1] - y_vals[j]
+       x_mid = (x_vals[j] + x_vals[j+1]) / 2
+       y_mid = (y_vals[j] + y_vals[j+1]) / 2
+       axes[1].arrow(x_mid, y_mid,dx * 0.0001, dy * 0.0001,color=palette_ext[i],alpha=0.9,head_width=1.5,head_length=1.5,length_includes_head=True)
+       axes[1].plot([x_vals[j], x_vals[j+1]], [y_vals[j], y_vals[j+1]], color=palette_ext[i], linewidth=1.5)
+   axes[1].scatter(x_vals, y_vals, color=palette_ext[i], edgecolor='k')
+axes[1].set_xlabel("Extension Strength (LSI - Isokinetic 60°/s)")
+
+
+#plot final plots
+plt.suptitle("Recovery is Nonlinear: Strength and Psychological Readiness", fontsize=22, font = 'Times New Roman', fontweight = 'bold', y=1.03, x =0.29)
+fig.text(0.174, 0.972, "Sample Patients' Development Over Time", ha='center', va='top', fontsize=18, font='Times New Roman')
+sns.despine(ax=axes[0], top=True, right=True) #take off the top and right spines
+sns.despine(ax=axes[1], top=True, right=True)
+plt.tight_layout()
+plt.savefig('connected.jpg', format='jpg', dpi=300, bbox_inches='tight')
+```
