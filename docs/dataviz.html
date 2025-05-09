@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -33,7 +67,7 @@ ul.task-list li input[type="checkbox"] {
 <meta name="quarto:offset" content="./">
 <link href="./datadictionary.html" rel="next">
 <link href="./eda.html" rel="prev">
-<link href="./knee.png" rel="icon" type="image/png">
+<link href="./ACL.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -149,8 +183,16 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#regression-plot---strength-vs-age" id="toc-regression-plot---strength-vs-age" class="nav-link active" data-scroll-target="#regression-plot---strength-vs-age"><span class="header-section-number">3.1</span> Regression Plot - Strength vs Age</a></li>
+  <li><a href="#spaghetti-plot---early-and-late-recovery" id="toc-spaghetti-plot---early-and-late-recovery" class="nav-link" data-scroll-target="#spaghetti-plot---early-and-late-recovery"><span class="header-section-number">3.2</span> Spaghetti Plot - early and late recovery</a></li>
+  <li><a href="#connected-scatterplot" id="toc-connected-scatterplot" class="nav-link" data-scroll-target="#connected-scatterplot"><span class="header-section-number">3.3</span> Connected Scatterplot</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -174,8 +216,226 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<div id="eac753ba" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#import dependencies</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.lines <span class="im">import</span> Line2D</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#load data</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>aclr <span class="op">=</span> pd.read_csv(<span class="st">'cleaned_aclr_data.csv'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="regression-plot---strength-vs-age" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="regression-plot---strength-vs-age"><span class="header-section-number">3.1</span> Regression Plot - Strength vs Age</h2>
+<div id="b641fa27" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#filter data for only patients at 5 to 7 months post operation</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>aclr_filtered <span class="op">=</span> aclr[aclr[<span class="st">'tss_dashboard'</span>] <span class="op">==</span> <span class="st">'5 to 7 months'</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#set figure size</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">11</span>, <span class="dv">7</span>))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">#melting data for isok variables, adding age to isok dataframe</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>isok <span class="op">=</span> aclr_filtered[[col <span class="cf">for</span> col <span class="kw">in</span> aclr.columns <span class="cf">if</span> <span class="st">'isok'</span> <span class="kw">in</span> col]].copy()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>isok[<span class="st">'age'</span>] <span class="op">=</span> aclr_filtered[<span class="st">'age'</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>isok <span class="op">=</span> isok.melt(id_vars<span class="op">=</span><span class="st">'age'</span>, var_name<span class="op">=</span><span class="st">"Measurement"</span>, value_name<span class="op">=</span><span class="st">"Value"</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>isok.replace([<span class="bu">float</span>(<span class="st">'inf'</span>), <span class="bu">float</span>(<span class="st">'-inf'</span>)], <span class="bu">float</span>(<span class="st">'nan'</span>), inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>isok.dropna(inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co">#averaging value by age</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>isok_avg <span class="op">=</span> isok.groupby([<span class="st">'age'</span>, <span class="st">'Measurement'</span>])[<span class="st">'Value'</span>].mean().reset_index()</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#seperating into extension and flexion measurements</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>isok_measurements <span class="op">=</span> isok_avg[<span class="st">'Measurement'</span>].unique()</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="co">#plotting isok regression plot</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> m <span class="kw">in</span> isok_measurements:</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    subset <span class="op">=</span> isok_avg[isok_avg[<span class="st">'Measurement'</span>] <span class="op">==</span> m]</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    label <span class="op">=</span> <span class="st">'Extension'</span> <span class="cf">if</span> <span class="st">'ext'</span> <span class="kw">in</span> m <span class="cf">else</span> <span class="st">'Flexion'</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    color <span class="op">=</span> <span class="st">'firebrick'</span> <span class="cf">if</span> <span class="st">'ext'</span> <span class="kw">in</span> m <span class="cf">else</span> <span class="st">'slateblue'</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    sns.regplot(data<span class="op">=</span>subset, x<span class="op">=</span><span class="st">'age'</span>, y<span class="op">=</span><span class="st">'Value'</span>, label<span class="op">=</span> label, color <span class="op">=</span> color, scatter<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>plt.tick_params(axis<span class="op">=</span><span class="st">'both'</span>, which<span class="op">=</span><span class="st">'both'</span>, length<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Age'</span>)</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'ISOK Strength'</span>)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">#adding title and subtitle</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Average Limb Symmetry Index (LSI) for Isokinetic Knee Strength Test at 60°, 5 to 7 Months Post-Operation'</span>,loc <span class="op">=</span> <span class="st">'left'</span>, x <span class="op">=</span> <span class="op">-</span><span class="fl">0.03</span>, family <span class="op">=</span> <span class="st">'serif'</span>, pad <span class="op">=</span> <span class="dv">20</span>, fontsize<span class="op">=</span><span class="dv">13</span>, color<span class="op">=</span><span class="st">'gray'</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.03</span>, <span class="fl">1.15</span>, <span class="st">'Despite Patient Age,'</span>, va<span class="op">=</span><span class="st">'top'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>plt.gca().transAxes)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.235</span>, <span class="fl">1.15</span>, <span class="st">"Flexion"</span>, va<span class="op">=</span><span class="st">'top'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, color <span class="op">=</span> <span class="st">'slateblue'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>plt.gca().transAxes)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.337</span>, <span class="fl">1.15</span>, <span class="st">'Strength Appears Better Than'</span>, va<span class="op">=</span><span class="st">'top'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>plt.gca().transAxes)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.732</span>, <span class="fl">1.15</span>, <span class="st">"Extension"</span>, va<span class="op">=</span><span class="st">'top'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, color <span class="op">=</span> <span class="st">'firebrick'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>plt.gca().transAxes)</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">#setting y range (LSI above 125 are rare)</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="dv">125</span>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">#despine and tight layout</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>sns.despine(top<span class="op">=</span><span class="va">True</span>, right<span class="op">=</span><span class="va">True</span>, left<span class="op">=</span><span class="va">True</span>, bottom<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'strengthreg.jpg'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'jpg'</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dataviz_files/figure-html/cell-3-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="spaghetti-plot---early-and-late-recovery" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="spaghetti-plot---early-and-late-recovery"><span class="header-section-number">3.2</span> Spaghetti Plot - early and late recovery</h2>
+<div id="54d27a35" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#group data by time since surgery</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> aclr.groupby(<span class="st">'tss_dashboard'</span>).agg(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    mean_ext_mvic_60<span class="op">=</span>(<span class="st">'lsi_ext_mvic_60'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    mean_flex_mvic<span class="op">=</span>(<span class="st">'lsi_flex_mvic_60'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    mean_ext_isok<span class="op">=</span>(<span class="st">'lsi_ext_isok_60'</span>, <span class="st">'mean'</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    mean_flex_isok<span class="op">=</span>(<span class="st">'lsi_flex_isok_60'</span>, <span class="st">'mean'</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>).reset_index()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#filter out and order only early and late time windows</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>new_order <span class="op">=</span> [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">0</span>,<span class="dv">4</span>,<span class="dv">5</span>]</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> acl_grouped.iloc[new_order]</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> acl_grouped.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> acl_grouped.drop(index<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>,<span class="dv">5</span>])</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>acl_grouped <span class="op">=</span> acl_grouped.reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#graph slopes</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>ax.plot(acl_grouped[<span class="st">'tss_dashboard'</span>], acl_grouped[<span class="st">'mean_ext_isok'</span>], linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, label<span class="op">=</span><span class="st">'Extension Isokinetic'</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>ax.plot(acl_grouped[<span class="st">'tss_dashboard'</span>], acl_grouped[<span class="st">'mean_flex_isok'</span>], linestyle<span class="op">=</span><span class="st">'-'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, label<span class="op">=</span><span class="st">'Flexion Isokinetic'</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>ax.plot(acl_grouped[<span class="st">'tss_dashboard'</span>], acl_grouped[<span class="st">'mean_flex_mvic'</span>], linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, label<span class="op">=</span><span class="st">'Flexion MVIC'</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>ax.plot(acl_grouped[<span class="st">'tss_dashboard'</span>], acl_grouped[<span class="st">'mean_ext_mvic_60'</span>], linestyle<span class="op">=</span><span class="st">'--'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, label<span class="op">=</span><span class="st">'Extension MVIC'</span>)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co">#remove unnecessary scaffolding</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>ax.set_ylim(<span class="dv">60</span>, <span class="dv">100</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>ax.set_yticks([])</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">''</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>ax.set_xticks([])</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">''</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>sns.despine(top<span class="op">=</span><span class="va">True</span>, right<span class="op">=</span><span class="va">True</span>, left<span class="op">=</span><span class="va">True</span>, bottom<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co">#add a legend for line type</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>custom_legend <span class="op">=</span> [</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>, label<span class="op">=</span><span class="st">'Isokinetic (60°/s)'</span>),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], color<span class="op">=</span><span class="st">'black'</span>, linestyle<span class="op">=</span><span class="st">'--'</span>, label<span class="op">=</span><span class="st">'MVIC (60°)'</span>)</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>ax.legend(handles<span class="op">=</span>custom_legend, loc<span class="op">=</span><span class="st">'lower right'</span>, fontsize<span class="op">=</span><span class="dv">12</span>)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#add color coded title (with degrees)</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.125</span>, <span class="fl">1.13</span>, <span class="st">'Patients Have Stronger'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.36</span>, <span class="fl">1.13</span>, <span class="st">'Flexion'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.462</span>, <span class="fl">1.13</span>, <span class="st">'Than'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.58</span>, <span class="fl">1.13</span>, <span class="st">'Extension'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.772</span>, <span class="fl">1.13</span>, <span class="st">'After Recovery'</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">22</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">#add a subtitle/y axis label</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.045</span>, <span class="fl">1.065</span>, <span class="st">'Average Limb Symmetry Index (LSI) for Knee Strength Tests at 60°/s'</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>         ha<span class="op">=</span><span class="st">'left'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">16</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="co">#label start and end values</span></span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">0.53</span>, <span class="st">'81.8%'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.96</span>, <span class="fl">0.9</span>, <span class="st">'96.4%'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">0.4</span>, <span class="st">'76.0%'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.96</span>, <span class="fl">0.45</span>, <span class="st">'78.4%'</span>, color<span class="op">=</span><span class="st">'slateblue'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">0.06</span>, <span class="st">'63.1%'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.96</span>, <span class="fl">0.49</span>, <span class="st">'79.7%'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="op">-</span><span class="fl">0.05</span>, <span class="fl">0.22</span>, <span class="st">'69.3%'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.96</span>, <span class="fl">0.39</span>, <span class="st">'76.3%'</span>, color<span class="op">=</span><span class="st">'firebrick'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a><span class="co">#label axes</span></span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.055</span>, <span class="dv">1</span>, <span class="st">"3–4 months post-op"</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>plt.text(<span class="fl">0.9</span>, <span class="dv">1</span>, <span class="st">"13–24 months post-op"</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">13</span>, transform<span class="op">=</span>ax.transAxes)</span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'spaghetti.jpg'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'jpg'</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dataviz_files/figure-html/cell-4-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="connected-scatterplot" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="connected-scatterplot"><span class="header-section-number">3.3</span> Connected Scatterplot</h2>
+<div id="4701fad6" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#define the selected patients that filter patinets with 2 or more visits and picked the top 5</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>df_required_2 <span class="op">=</span> aclr.dropna(subset<span class="op">=</span>[<span class="st">'lsi_flex_mvic_60'</span>, <span class="st">'acl_rsi'</span>, <span class="st">'tss'</span>])</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>patient_counts_2 <span class="op">=</span> df_required_2[<span class="st">'record_id'</span>].value_counts()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>selected_patients_2 <span class="op">=</span> patient_counts_2[patient_counts_2 <span class="op">&gt;=</span> <span class="dv">2</span>].index[:<span class="dv">5</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>df_selected_2 <span class="op">=</span> df_required_2[df_required_2[<span class="st">'record_id'</span>].isin(selected_patients_2)]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#same with iso</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>df_iso_required <span class="op">=</span> aclr.dropna(subset<span class="op">=</span>[<span class="st">'lsi_ext_isok_60'</span>, <span class="st">'acl_rsi'</span>, <span class="st">'tss'</span>])</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>patient_counts_iso <span class="op">=</span> df_iso_required[<span class="st">'record_id'</span>].value_counts()</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>selected_iso_patients <span class="op">=</span> patient_counts_iso[patient_counts_iso <span class="op">&gt;=</span> <span class="dv">2</span>].index[:<span class="dv">5</span>]</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>df_iso_selected <span class="op">=</span> df_iso_required[df_iso_required[<span class="st">'record_id'</span>].isin(selected_iso_patients)]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#make the legend sit inside the plot </span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>, figsize<span class="op">=</span>(<span class="dv">16</span>, <span class="dv">8</span>), sharey<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#first plot the flexion strength vs rsi</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>palette <span class="op">=</span> sns.color_palette(<span class="st">"colorblind"</span>, <span class="bu">len</span>(selected_patients_2))</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, pid <span class="kw">in</span> <span class="bu">enumerate</span>(selected_patients_2):</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>   patient_df <span class="op">=</span> df_selected_2[df_selected_2[<span class="st">'record_id'</span>] <span class="op">==</span> pid]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>   x_vals <span class="op">=</span> patient_df[<span class="st">'lsi_flex_mvic_60'</span>].values</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>   y_vals <span class="op">=</span> patient_df[<span class="st">'acl_rsi'</span>].values</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(x_vals) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>       dx <span class="op">=</span> x_vals[j<span class="op">+</span><span class="dv">1</span>] <span class="op">-</span> x_vals[j]</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>       dy <span class="op">=</span> y_vals[j<span class="op">+</span><span class="dv">1</span>] <span class="op">-</span> y_vals[j]</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>       x_mid <span class="op">=</span> (x_vals[j] <span class="op">+</span> x_vals[j<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>       y_mid <span class="op">=</span> (y_vals[j] <span class="op">+</span> y_vals[j<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>       axes[<span class="dv">0</span>].arrow(x_mid, y_mid,dx <span class="op">*</span> <span class="fl">0.0001</span>, dy <span class="op">*</span> <span class="fl">0.0001</span>,color<span class="op">=</span>palette[i],alpha<span class="op">=</span><span class="fl">0.9</span>,head_width<span class="op">=</span><span class="fl">1.5</span>,head_length<span class="op">=</span><span class="fl">1.5</span>,length_includes_head<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>       axes[<span class="dv">0</span>].plot([x_vals[j], x_vals[j<span class="op">+</span><span class="dv">1</span>]], [y_vals[j], y_vals[j<span class="op">+</span><span class="dv">1</span>]], color<span class="op">=</span>palette[i], linewidth<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>   axes[<span class="dv">0</span>].scatter(x_vals, y_vals, color<span class="op">=</span>palette[i], edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_xlabel(<span class="st">"Flexion Strength (LSI - MVIC 60°)"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_ylabel(<span class="st">"ACL-RSI Score"</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="co">#make the legend</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>legend_patch <span class="op">=</span> plt.Line2D([<span class="dv">0</span>], [<span class="dv">0</span>], marker<span class="op">=</span><span class="st">'_'</span>, color<span class="op">=</span><span class="st">'grey'</span>, label<span class="op">=</span><span class="st">'Each color = one patient'</span>,markerfacecolor<span class="op">=</span><span class="st">'gray'</span>, markersize<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].legend(handles<span class="op">=</span>[legend_patch], loc<span class="op">=</span><span class="st">'lower right'</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="co">#make the second plot for extension strength vs rsi</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>palette_ext <span class="op">=</span> sns.color_palette(<span class="st">"colorblind"</span>, <span class="bu">len</span>(selected_iso_patients))</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, pid <span class="kw">in</span> <span class="bu">enumerate</span>(selected_iso_patients):</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>   patient_df <span class="op">=</span> df_iso_selected[df_iso_selected[<span class="st">'record_id'</span>] <span class="op">==</span> pid]</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>   x_vals <span class="op">=</span> patient_df[<span class="st">'lsi_ext_isok_60'</span>].values</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>   y_vals <span class="op">=</span> patient_df[<span class="st">'acl_rsi'</span>].values</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>   <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(x_vals) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>       dx <span class="op">=</span> x_vals[j<span class="op">+</span><span class="dv">1</span>] <span class="op">-</span> x_vals[j]</span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>       dy <span class="op">=</span> y_vals[j<span class="op">+</span><span class="dv">1</span>] <span class="op">-</span> y_vals[j]</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>       x_mid <span class="op">=</span> (x_vals[j] <span class="op">+</span> x_vals[j<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>       y_mid <span class="op">=</span> (y_vals[j] <span class="op">+</span> y_vals[j<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>       axes[<span class="dv">1</span>].arrow(x_mid, y_mid,dx <span class="op">*</span> <span class="fl">0.0001</span>, dy <span class="op">*</span> <span class="fl">0.0001</span>,color<span class="op">=</span>palette_ext[i],alpha<span class="op">=</span><span class="fl">0.9</span>,head_width<span class="op">=</span><span class="fl">1.5</span>,head_length<span class="op">=</span><span class="fl">1.5</span>,length_includes_head<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>       axes[<span class="dv">1</span>].plot([x_vals[j], x_vals[j<span class="op">+</span><span class="dv">1</span>]], [y_vals[j], y_vals[j<span class="op">+</span><span class="dv">1</span>]], color<span class="op">=</span>palette_ext[i], linewidth<span class="op">=</span><span class="fl">1.5</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>   axes[<span class="dv">1</span>].scatter(x_vals, y_vals, color<span class="op">=</span>palette_ext[i], edgecolor<span class="op">=</span><span class="st">'k'</span>)</span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_xlabel(<span class="st">"Extension Strength (LSI - Isokinetic 60°/s)"</span>)</span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#plot final plots</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>plt.suptitle(<span class="st">"Recovery is Nonlinear: Strength and Psychological Readiness"</span>, fontsize<span class="op">=</span><span class="dv">22</span>, font <span class="op">=</span> <span class="st">'Times New Roman'</span>, fontweight <span class="op">=</span> <span class="st">'bold'</span>, y<span class="op">=</span><span class="fl">1.03</span>, x <span class="op">=</span><span class="fl">0.29</span>)</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>fig.text(<span class="fl">0.174</span>, <span class="fl">0.972</span>, <span class="st">"Sample Patients' Development Over Time"</span>, ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'top'</span>, fontsize<span class="op">=</span><span class="dv">18</span>, font<span class="op">=</span><span class="st">'Times New Roman'</span>)</span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>sns.despine(ax<span class="op">=</span>axes[<span class="dv">0</span>], top<span class="op">=</span><span class="va">True</span>, right<span class="op">=</span><span class="va">True</span>) <span class="co">#take off the top and right spines</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>sns.despine(ax<span class="op">=</span>axes[<span class="dv">1</span>], top<span class="op">=</span><span class="va">True</span>, right<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">'connected.jpg'</span>, <span class="bu">format</span><span class="op">=</span><span class="st">'jpg'</span>, dpi<span class="op">=</span><span class="dv">300</span>, bbox_inches<span class="op">=</span><span class="st">'tight'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="dataviz_files/figure-html/cell-5-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
